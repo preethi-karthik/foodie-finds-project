@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <title>FoodieFinds</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+            <div class="jumbotron">
+  <h1>Foodie Finds</h1>
+  <p>Your Food destination</p>
+</div>
+        <div class="container">
+  <div class="row">
+    <div class="col-md-3 pull-left" >
+ 
+        <form>
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search">
+    <div class="input-group-btn">
+        <button id = "search_button"  class="btn btn-default" type='button' >
+        <i class="glyphicon glyphicon-search"></i>
+      </button>
+    </div>
+  </div>
+</form>
+        
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Category
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div id="CategoryCheckBoxPanel"class="panel-body" >
+ 
+      </div>
+    </div>
+  </div>
+            
+            
+            
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Ingredient
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div  id="IngredientCheckBoxPanel" class="panel-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  
+    <div class="col-md-9">
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recipe</h3>
+  </div>
+  <div id = "recipiesPanel"class="panel-body">
+
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+    </body>
+    <script>
+        $( document ).ready(function() {
+        
+  $.get("Ingredient", function(data, status){
+        var len = data.length;
+        
+        for (var i = 0 ;i<len;i++)
+        {
+            
+          $("#IngredientCheckBoxPanel").append("<div class='checkbox'><label><input type='checkbox' value= "+ data[i].ingredientId+
+                  ">"+data[i].ingredientName+"</label></div>")  
+        }   
+    });
+    
+    $.get("Categories", function(data, status){
+          var len = data.length;
+          
+        for (var i = 0 ;i<len;i++)
+        {
+          $("#CategoryCheckBoxPanel").append("<div class='checkbox'><label><input type='checkbox' value= "+ data[i].categoryId+
+                  ">"+data[i].categoryName+"</label></div>")  
+        }
+    });
+    
+
+
+
+    $.get("Recipe", function(data, status){
+        var len = data.length;
+         
+       DisplayPanelData(data);
+    });
+    
+        
+    $( "#search_button" ).click(function() {
+ 
+ 
+  var chosenCategory = $("#CategoryCheckBoxPanel input:checked" );
+  var chosenIngredient = $("#IngredientCheckBoxPanel input:checked" );
+
+var url = "Recipe?"+extractParams("CategoryToSearch",chosenCategory)+
+extractParams("IngredientToSearch",chosenIngredient);
+var url = url.substr(0,url.length-1);
+console.log(url);
+
+$.get(url, function(data){ 
+
+  DisplayPanelData(data);
+ 
+}).fail(function(err) {
+    console.log(err);
+});
+
+});
+
+
+function DisplayPanelData(data){
+
+  $("#recipiesPanel").html('');
+    var len = data.length;
+         
+        for (var i = 0 ;i<len;i++)
+        {
+         if(data[i].recipeId==1)
+         {
+             $("#recipiesPanel").append("   <div class='media'>"+
+  "<div class='media-left media-middle''>"+
+    "<a href='#'>"+
+      "<img class='media-object'src='http://rasamalaysia.com/wp-content/uploads/2016/03/tandoori-chicken3.jpg' class='img-thumbnail' alt='Cinque Terre' width='100' height='100'>"+
+    "</a>"+
+  "</div>"+
+  "<div class='media-body''>"+
+     " <a href='recipedetail?Id="+data[i].recipeId+"'> <h4 class='media-heading''>"+ data[i].recipeName+"</h4></a> </div> </div>")  ;
+         }else if (data[i].recipeId==2)
+         {
+             $("#recipiesPanel").append("   <div class='media'>"+
+  "<div class='media-left media-middle''>"+
+    "<a href='#'>"+
+      "<img class='media-object'src='http://assets.epicurious.com/photos/576450dde047a6cf1ee8268c/2:1/w_1260%2Ch_630/miso-soup.jpg' class='img-thumbnail' alt='Cinque Terre' width='100' height='100'>"+
+    "</a>"+
+  "</div>"+
+  "<div class='media-body''>"+
+     " <a href='recipedetail?Id="+data[i].recipeId+"'> <h4 class='media-heading''>"+ data[i].recipeName+"</h4></a> </div> </div>") ; 
+         }
+          else if (data[i].recipeId==3)
+         {
+             $("#recipiesPanel").append("   <div class='media'>"+
+  "<div class='media-left media-middle''>"+
+    "<a href='#'>"+
+      "<img class='media-object'src='http://24carrotkitchen.com/wp-content/uploads/2015/08/DSC_0563_8681.jpg' class='img-thumbnail' alt='Cinque Terre' width='100' height='100'>"+
+    "</a>"+
+  "</div>"+
+  "<div class='media-body''>"+
+     " <a href='recipedetail?Id="+data[i].recipeId+"'> <h4 class='media-heading''>"+ data[i].recipeName+"</h4></a> </div> </div>")  ;
+         }
+      }
+
+}
+
+function extractParams(paramName ,params){  
+var url ='';
+for(var i=0 ;i<params.length;i++){
+    url= url+paramName+"="+params[i].value+"&";
+  }
+return url;
+}
+
+});
+       </script>
+</html>

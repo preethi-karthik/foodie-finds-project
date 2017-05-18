@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title> </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <title>Recipe</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <div id = "recipiePanel" class="panel panel-default">
+  <div id = "recipiePaneltitle" class="panel-heading">
+    
+  </div>
+  <div id = "recipiePanelbody" class="panel-body">
+      <div id = "image-div" >
+        
+      </div>
+      
+
+
+            <div class = "col-md-4">
+            <div id = "Ingredient-len-div">
+
+            </div>
+             </div>
+         <div class = "col-md-4">
+            <div id = "Calories-div">
+            </div>
+             </div>  
+         <div class = "col-md-4">
+            <div id = "Minutes-div">  
+            </div>
+             </div>  
+
+        <!--  <div class="panel panel-default"> -->
+       <!-- <div class="panel-body">-->
+       <div class = "col-md-1"> </div>
+       <div class = "col-md-6">
+        <div class="container"></div>
+        <div id="exTab1" class="container">	
+           <ul  class="nav nav-pills">
+			<li class="active">
+        <a  href="#ingredient-div" data-toggle="tab">Ingredients</a>
+			</li>
+			<li><a href="#Procedure-div" data-toggle="tab">procedure</a>
+			</li>
+		</ul>
+			<div class="tab-content clearfix">
+			  <div id ="ingredient-div" class="tab-pane active" id="1a">   
+                          
+				</div>
+				<div id ="Procedure-div" class="tab-pane" id="2a">
+         
+</div>
+
+			</div>
+  </div>
+       
+       </div>
+         </div>
+</div>
+        <!--</div> -->
+        <!-- </div> -->
+        <!-- Write your comments here -->
+<hr></hr>
+    </body>
+    <script>
+         $( document ).ready(function() {
+   
+        function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('?'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? 1 : sParameterName[1];
+        }
+    }
+};
+
+var RecipeId = getUrlParameter('Id');
+
+
+  $.get("Recipe?RecipeId="+RecipeId, function(data, status){
+  
+  
+  if(RecipeId==1)
+         {
+         $("#image-div").append("<img class='media-object'"+
+         "src='http://rasamalaysia.com/wp-content/uploads/2016/03/tandoori-chicken3.jpg'"+ 
+         " class='img-thumbnail' alt='Cinque Terre' width='300' height='300'/>")  ;
+       }
+       else if(RecipeId==2)
+       {
+       $("#image-div").append("<img class='media-object'"+
+         "src='http://assets.epicurious.com/photos/576450dde047a6cf1ee8268c/2:1/w_1260%2Ch_630/miso-soup.jpg'"+ 
+         " class='img-thumbnail' alt='Cinque Terre' width='300' height='300'/>")  ;
+       }
+       else if(RecipeId == 3 ) 
+       {
+       $("#image-div").append("<img class='media-object'"+
+         "src='http://24carrotkitchen.com/wp-content/uploads/2015/08/DSC_0563_8681.jpg'"+ 
+         " class='img-thumbnail' alt='Cinque Terre' width='300' height='300'/>")  ;
+       }
+       
+       $("#recipiePaneltitle").append("<h3  class='panel-title'>"+ data.recipeName+
+              " </h3> ")  ;
+       $("#Minutes-div").append("<h3>Minutes : "+ data.prep_time+" <span class='label label-default'></span></h3>");
+     
+         $("#Calories-div").append("<h3>Calories : "+data.calories+" <span class='label label-default'></span></h3>"); 
+         var len = data.ingredients.length;
+         $("#Ingredient-len-div").append(" <h3>Ingredients:"+len+"<span class='label label-default'></span></h3> " );
+        
+        for(var i=0;i<len;i++)
+        {
+            $("#ingredient-div").append(" "+data.ingredients[i].quantity+" "+data.ingredients[i].ingredientName+"<br>");
+        }
+        
+       $("#Procedure-div").append("<p>"+data.procedure+"</p>");
+       
+          
+    });
+    
+
+
+});
+        </script>
+        
+</html>
